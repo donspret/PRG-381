@@ -48,14 +48,17 @@ public class StockIssuanceDAO {
                         conn.rollback();
                         throw new InsufficientStockException("Material not found.");
                     }
+
                     int available = rs.getInt("quantity");
                     String materialName = rs.getString("name");
 
                     if (quantityRequested > available) {
                         conn.rollback();
                         throw new InsufficientStockException(
-                                "Cannot issue " + quantityRequested + " units of \"" + materialName +
-                                        "\" - only " + available + " available in stock.");
+                                "Cannot issue " + quantityRequested +
+                                        " units of \"" + materialName +
+                                        "\" - only " + available +
+                                        " available in stock.");
                     }
                 }
             }
@@ -81,16 +84,20 @@ public class StockIssuanceDAO {
         }
     }
 
-    /** Full issuance history, most recent first, joined with material/cleaner names for display. */
+    /** Full issuance history */
     public List<StockIssuance> getIssuanceHistory() throws SQLException {
-        String sql = "SELECT si.issuance_id, si.material_id, m.name AS material_name, " +
-                "si.cleaner_id, c.first_name, c.last_name, si.quantity_issued, si.issued_date, si.issued_by " +
+
+        String sql =
+                "SELECT si.issuance_id, si.material_id, m.name AS material_name, " +
+                "si.cleaner_id, c.first_name, c.last_name, " +
+                "si.quantity_issued, si.issued_date, si.issued_by " +
                 "FROM stock_issuance si " +
                 "JOIN materials m ON si.material_id = m.material_id " +
                 "JOIN cleaners c ON si.cleaner_id = c.cleaner_id " +
                 "ORDER BY si.issued_date DESC";
 
         List<StockIssuance> history = new ArrayList<>();
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -99,12 +106,17 @@ public class StockIssuanceDAO {
                 history.add(mapRowToIssuance(rs));
             }
         }
+
         return history;
     }
 
-    /** Inventory report: every material with its current stock level. */
+    /** Inventory report */
     public List<Material> getInventoryReport() throws SQLException {
-        String sql = "SELECT material_id, name, quantity, reorder_level, unit FROM materials ORDER BY name";
+
+        String sql =
+                "SELECT material_id, name, quantity, reorder_level, unit " +
+                "FROM materials ORDER BY name";
+
         List<Material> materials = new ArrayList<>();
 
         try (Connection conn = DBConnection.getConnection();
@@ -112,22 +124,32 @@ public class StockIssuanceDAO {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+
                 materials.add(new Material(
                         rs.getInt("material_id"),
                         rs.getString("name"),
+                        "",
+                        rs.getString("unit"),
                         rs.getInt("quantity"),
                         rs.getInt("reorder_level"),
-                        rs.getString("unit")
+                        null,
+                        0
                 ));
             }
         }
+
         return materials;
     }
 
-    /** Low-stock report: only materials at or below their reorder level. */
+    /** Low stock report */
     public List<Material> getLowStockReport() throws SQLException {
-        String sql = "SELECT material_id, name, quantity, reorder_level, unit " +
-                "FROM materials WHERE quantity <= reorder_level ORDER BY quantity ASC";
+
+        String sql =
+                "SELECT material_id, name, quantity, reorder_level, unit " +
+                "FROM materials " +
+                "WHERE quantity <= reorder_level " +
+                "ORDER BY quantity ASC";
+
         List<Material> materials = new ArrayList<>();
 
         try (Connection conn = DBConnection.getConnection();
@@ -135,39 +157,57 @@ public class StockIssuanceDAO {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+
                 materials.add(new Material(
                         rs.getInt("material_id"),
                         rs.getString("name"),
+                        "",
+                        rs.getString("unit"),
                         rs.getInt("quantity"),
                         rs.getInt("reorder_level"),
-                        rs.getString("unit")
+                        null,
+                        0
                 ));
             }
         }
+
         return materials;
     }
 
-    /** Material usage report: total quantity issued per material, most-used first. */
+    /** Material usage report */
     public List<Object[]> getMaterialUsageReport() throws SQLException {
-        String sql = "SELECT m.name, SUM(si.quantity_issued) AS total_issued " +
-                "FROM stock_issuance si JOIN materials m ON si.material_id = m.material_id " +
-                "GROUP BY m.name ORDER BY total_issued DESC";
+
+        String sql =
+                "SELECT m.name, SUM(si.quantity_issued) AS total_issued " +
+                "FROM stock_issuance si " +
+                "JOIN materials m ON si.material_id = m.material_id " +
+                "GROUP BY m.name " +
+                "ORDER BY total_issued DESC";
 
         List<Object[]> usage = new ArrayList<>();
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                usage.add(new Object[]{rs.getString("name"), rs.getInt("total_issued")});
+                usage.add(new Object[]{
+                        rs.getString("name"),
+                        rs.getInt("total_issued")
+                });
             }
         }
+
         return usage;
     }
 
-    /** Used to populate the material dropdown on the issue-stock form. */
+    /** Materials dropdown */
     public List<Material> getAllMaterials() throws SQLException {
-        String sql = "SELECT material_id, name, quantity, reorder_level, unit FROM materials ORDER BY name";
+
+        String sql =
+                "SELECT material_id, name, quantity, reorder_level, unit " +
+                "FROM materials ORDER BY name";
+
         List<Material> materials = new ArrayList<>();
 
         try (Connection conn = DBConnection.getConnection();
@@ -175,21 +215,30 @@ public class StockIssuanceDAO {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+
                 materials.add(new Material(
                         rs.getInt("material_id"),
                         rs.getString("name"),
+                        "",
+                        rs.getString("unit"),
                         rs.getInt("quantity"),
                         rs.getInt("reorder_level"),
-                        rs.getString("unit")
+                        null,
+                        0
                 ));
             }
         }
+
         return materials;
     }
 
-    /** Used to populate the cleaner dropdown on the issue-stock form. */
+    /** Cleaners dropdown */
     public List<Cleaner> getAllCleaners() throws SQLException {
-        String sql = "SELECT cleaner_id, first_name, last_name, department FROM cleaners ORDER BY first_name";
+
+        String sql =
+                "SELECT cleaner_id, first_name, last_name, department " +
+                "FROM cleaners ORDER BY first_name";
+
         List<Cleaner> cleaners = new ArrayList<>();
 
         try (Connection conn = DBConnection.getConnection();
@@ -197,6 +246,7 @@ public class StockIssuanceDAO {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+
                 cleaners.add(new Cleaner(
                         rs.getInt("cleaner_id"),
                         rs.getString("first_name"),
@@ -205,19 +255,26 @@ public class StockIssuanceDAO {
                 ));
             }
         }
+
         return cleaners;
     }
 
     private StockIssuance mapRowToIssuance(ResultSet rs) throws SQLException {
+
         StockIssuance issuance = new StockIssuance();
+
         issuance.setIssuanceId(rs.getInt("issuance_id"));
         issuance.setMaterialId(rs.getInt("material_id"));
         issuance.setMaterialName(rs.getString("material_name"));
         issuance.setCleanerId(rs.getInt("cleaner_id"));
-        issuance.setCleanerName(rs.getString("first_name") + " " + rs.getString("last_name"));
+        issuance.setCleanerName(
+                rs.getString("first_name") + " " +
+                rs.getString("last_name")
+        );
         issuance.setQuantityIssued(rs.getInt("quantity_issued"));
         issuance.setIssuedDate(rs.getTimestamp("issued_date"));
         issuance.setIssuedBy(rs.getString("issued_by"));
+
         return issuance;
     }
 }
