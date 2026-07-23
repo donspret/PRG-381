@@ -1,65 +1,63 @@
 package com.example.final_prg381.model;
 
-public class Material{
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
+public class Material {
     private int materialId;
-    private String name;
-    private int quantity;
-    private int reorderLevel;
+    private String materialName;
+    private String category;
     private String unit;
+    private int quantityInStock;
+    private int lowStockThreshold;
+    private BigDecimal unitPrice;
+    private int supplierId;
+    private Timestamp lastUpdated;
 
-    public Material(){
+    public Material() {
     }
-    public Material(int materialId, String name,int quantity, int reorderLevel,String unit){
+
+    public Material(int materialId, String materialName, String category, String unit,
+                    int quantityInStock, int lowStockThreshold, BigDecimal unitPrice,
+                    int supplierId) {
         this.materialId = materialId;
-        this.name= name;
-        this.quantity = quantity;
-        this.reorderLevel = reorderLevel;
+        this.materialName = materialName;
+        this.category = category;
         this.unit = unit;
+        this.quantityInStock = quantityInStock;
+        this.lowStockThreshold = lowStockThreshold;
+        this.unitPrice = unitPrice;
+        this.supplierId = supplierId;
     }
 
-    public int getMaterialId(){
-        return materialId;
-    }
+    public int getMaterialId() { return materialId; }
+    public void setMaterialId(int materialId) { this.materialId = materialId; }
 
-    public void setMaterialId(int materialId){
-        this.materialId = materialId;
-    }
+    public String getMaterialName() { return materialName; }
+    public void setMaterialName(String materialName) { this.materialName = materialName; }
 
-    public String getName(){
-        return name;
-    }
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
-    public void setName(String name){
-        this.name = name;
-    }
+    public String getUnit() { return unit; }
+    public void setUnit(String unit) { this.unit = unit; }
 
-    public int getQuantity() {
-        return quantity;
-    }
+    public int getQuantityInStock() { return quantityInStock; }
+    public void setQuantityInStock(int quantityInStock) { this.quantityInStock = quantityInStock; }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+    public int getLowStockThreshold() { return lowStockThreshold; }
+    public void setLowStockThreshold(int lowStockThreshold) { this.lowStockThreshold = lowStockThreshold; }
 
-    public int getReorderLevel() {
-        return reorderLevel;
-    }
+    public BigDecimal getUnitPrice() { return unitPrice; }
+    public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
 
-    public void setReorderLevel(int reorderLevel) {
-        this.reorderLevel = reorderLevel;
-    }
+    public int getSupplierId() { return supplierId; }
+    public void setSupplierId(int supplierId) { this.supplierId = supplierId; }
 
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
+    public Timestamp getLastUpdated() { return lastUpdated; }
+    public void setLastUpdated(Timestamp lastUpdated) { this.lastUpdated = lastUpdated; }
 
     public boolean isLowStock() {
-        return quantity <= reorderLevel;
+        return quantityInStock <= lowStockThreshold;
     }
-
 }
