@@ -6,14 +6,24 @@ import java.sql.SQLException;
 
 public class DBConnection {
     private static final String URL =
-            "jdbc:postgresql://localhost:5432/cleaning_inventory";
+            "jdbc:postgresql://localhost:5432/------"; //Change to your local connection
 
-    private static final String USER =
-            "postgres";
+    private static final String USER = //Change to your local USER
+            "-------";
 
-    private static final String PASSWORD =
-            "Database123";
+    private static final String PASSWORD = //Change to your local Password
+            "-------";
 
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+            System.out.println("PostgreSQL Driver registered successfully!");
+        } catch (ClassNotFoundException e) {
+            System.err.println("PostgreSQL Driver NOT found!");
+            System.err.println("Make sure postgresql-*.jar is in Tomcat's lib folder.");
+            e.printStackTrace();
+        }
+    }
 
     public static Connection getConnection() {
 

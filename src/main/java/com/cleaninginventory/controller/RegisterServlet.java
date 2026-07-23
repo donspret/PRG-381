@@ -23,7 +23,6 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // If user is already logged in, redirect to dashboard
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
             response.sendRedirect("DashboardServlet");
@@ -44,7 +43,6 @@ public class RegisterServlet extends HttpServlet {
         String confirmPassword = request.getParameter("confirmPassword");
         String role = request.getParameter("role");
 
-        // Validate all required fields
         if (firstName == null || firstName.trim().isEmpty() ||
                 lastName == null || lastName.trim().isEmpty() ||
                 email == null || email.trim().isEmpty() ||
@@ -58,20 +56,17 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        // Clean inputs
         firstName = firstName.trim();
         lastName = lastName.trim();
         email = email.trim();
         username = username.trim();
 
-        // Check if passwords match
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Passwords do not match.");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
-        // Validate password strength
         String passwordError = PasswordValidator.validatePassword(password);
         if (passwordError != null) {
             request.setAttribute("error", passwordError);
@@ -79,7 +74,6 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        // Create user
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -88,7 +82,6 @@ public class RegisterServlet extends HttpServlet {
         user.setPassword(password);
         user.setRole(role);
 
-        // Register user
         String result = userDAO.registerUser(user);
 
         if (result.equals("SUCCESS")) {

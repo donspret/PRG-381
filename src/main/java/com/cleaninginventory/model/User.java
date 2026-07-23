@@ -10,12 +10,8 @@ public class User {
     private String role;
     private String fullName;
 
-
-
-
     public User() {
     }
-
 
     public User(int userId, String firstName, String lastName,
                 String email, String username,
@@ -32,7 +28,6 @@ public class User {
 
     }
 
-    //Getters & Setters
     public int getUserId() {
         return userId;
     }

@@ -10,15 +10,12 @@ import java.sql.SQLException;
 
 public class UserDAO {
 
-    // REGISTER USER - Returns String for better error messages
     public String registerUser(User user) {
 
-        // Check if username exists
         if (usernameExists(user.getUsername())) {
             return "Username already exists. Please choose another.";
         }
 
-        // Check if email exists
         if (emailExists(user.getEmail())) {
             return "Email already registered. Please use another email.";
         }
@@ -51,12 +48,10 @@ public class UserDAO {
         }
     }
 
-    // LOGIN USER - Checks is_active
     public User loginUser(String username, String password) {
 
         User user = null;
 
-        // Added is_active = true check
         String sql = "SELECT * FROM users WHERE username = ? AND password = ? AND is_active = true";
 
         try (Connection connection = DBConnection.getConnection();
@@ -86,7 +81,6 @@ public class UserDAO {
         return user;
     }
 
-    // NEW: Check if username exists
     public boolean usernameExists(String username) {
         String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
 
@@ -106,7 +100,6 @@ public class UserDAO {
         return false;
     }
 
-    // NEW: Check if email exists
     public boolean emailExists(String email) {
         String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
 
@@ -126,7 +119,6 @@ public class UserDAO {
         return false;
     }
 
-    // NEW: Get user by username (optional)
     public User getUserByUsername(String username) {
         User user = null;
         String sql = "SELECT * FROM users WHERE username = ?";
@@ -156,7 +148,6 @@ public class UserDAO {
         return user;
     }
 
-    // NEW: Get user by email (optional)
     public User getUserByEmail(String email) {
         User user = null;
         String sql = "SELECT * FROM users WHERE email = ?";

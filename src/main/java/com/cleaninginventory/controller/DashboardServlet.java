@@ -17,6 +17,7 @@ public class DashboardServlet extends HttpServlet {
 
     @Override
     public void init() {
+        System.out.println("✅ DashboardServlet initialized!");
         dashboardDAO = new DashboardDAO();
     }
 
@@ -24,24 +25,26 @@ public class DashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Check if user is logged in
+        System.out.println("✅ DashboardServlet doGet called!");
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
+            System.out.println("❌ User not logged in, redirecting to login");
             response.sendRedirect("login.jsp");
             return;
         }
 
-        // Get user from session
         User user = (User) session.getAttribute("user");
+        System.out.println("👤 User: " + user.getUsername());
 
-        // Get dashboard statistics
+        System.out.println("📊 Fetching dashboard statistics...");
         DashboardStats stats = dashboardDAO.getDashboardStats();
+        System.out.println("📊 Stats retrieved: " + stats);
 
-        // Set attributes for JSP
         request.setAttribute("stats", stats);
         request.setAttribute("user", user);
 
-        // Forward to dashboard
+        System.out.println("🔄 Forwarding to dashboard.jsp");
         request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     }
 }

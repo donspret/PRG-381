@@ -22,7 +22,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // If user is already logged in, redirect to dashboard
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
             response.sendRedirect("DashboardServlet");
@@ -38,7 +37,6 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        // Input validation
         if (username == null || username.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()) {
 
@@ -47,23 +45,19 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // Authenticate user
         User user = userDAO.loginUser(username.trim(), password.trim());
 
         if (user != null) {
-            // Login successful - create session
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             session.setAttribute("username", user.getUsername());
             session.setAttribute("role", user.getRole());
             session.setAttribute("fullName", user.getFullName());
-            session.setMaxInactiveInterval(30 * 60); // 30 minutes timeout
+            session.setMaxInactiveInterval(30 * 60);
 
-            // Redirect to dashboard
             response.sendRedirect("DashboardServlet");
 
         } else {
-            // Login failed
             request.setAttribute("error", "Invalid username or password. Please try again.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
