@@ -8,6 +8,9 @@ public class User {
     private String username;
     private String password;
     private String role;
+    private String fullName;
+
+
 
 
     public User() {
@@ -25,9 +28,11 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+
+
     }
 
-
+    //Getters & Setters
     public int getUserId() {
         return userId;
     }
@@ -54,6 +59,9 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 
     public String getEmail() {
         return email;

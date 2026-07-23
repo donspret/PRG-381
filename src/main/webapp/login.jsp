@@ -2,30 +2,33 @@
 
 <html>
 <head>
-    <title>Login</title>
+    <title>Login - Cleaning Inventory System</title>
 </head>
 
 <body>
 
-<h2>Login</h2>
+<h2>Cleaning Inventory System</h2>
+<p>University Cleaning Management System</p>
 
 <form action="LoginServlet" method="post">
 
-    Username:
-    <input type="text" name="username">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" placeholder="Enter your username" required>
 
     <br><br>
 
-    Password:
-    <input type="password" name="password">
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
     <br><br>
 
-    <button type="submit">
-        Login
-    </button>
+    <button type="submit"> Login </button>
 
 </form>
+
+<p>
+    Don't have an account? <a href="register.jsp">Register here</a>
+</p>
 
 </body>
 </html>

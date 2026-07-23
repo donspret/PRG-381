@@ -19,16 +19,14 @@ public class TestRegister {
         user.setRole("Storekeeper");
 
 
+
         UserDAO dao = new UserDAO();
+        String result = dao.registerUser(user);  // ✅ FIXED - String
 
-        boolean result = dao.registerUser(user);
-
-
-        if(result){
-            System.out.println("User registered!");
-        }
-        else{
-            System.out.println("Registration failed!");
+        if (result.equals("SUCCESS")) {
+            System.out.println("✅ User registered successfully!");
+        } else {
+            System.out.println("❌ Registration failed: " + result);
         }
 
     }

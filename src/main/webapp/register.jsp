@@ -2,47 +2,47 @@
 
 <html>
 <head>
-    <title>Register</title>
+    <title>Register - Cleaning Inventory System</title>
 </head>
 
 <body>
 
 <h2>Create Account</h2>
+<p>Register for Cleaning Management System</p>
 
 <form action="${pageContext.request.contextPath}/RegisterServlet" method="post">
 
-    <label>First Name:</label>
-    <input type="text" name="firstName">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" required>
     <br><br>
 
-    <label>Last Name:</label>
-    <input type="text" name="lastName">
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" required>
     <br><br>
 
-    <label>Email:</label>
-    <input type="email" name="email">
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
     <br><br>
 
-    <label>Username:</label>
-    <input type="text" name="username">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
     <br><br>
 
-    <label>Password:</label>
-    <input type="password" name="password">
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+    <small>8+ chars, uppercase, lowercase, digit, special char (@#$%^&+=!)</small>
     <br><br>
 
-    <label>Role:</label>
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" required>
 
-    <select name="role">
-
-        <option value="Storekeeper">
-            Storekeeper
-        </option>
-
-        <option value="Supervisor">
-            Supervisor
-        </option>
-
+    <label for="role">Role:</label>
+    <select id="role" name="role" required>
+        <option value="">Select Role</option>
+        <option value="Storekeeper">Storekeeper</option>
+        <option value="Supervisor">Supervisor</option>
     </select>
 
     <br><br>
@@ -53,5 +53,8 @@
 
 </form>
 
+<p>
+    Already have an account? <a href="login.jsp">Sign in here</a>
+</p>
 </body>
 </html>
