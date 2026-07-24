@@ -323,7 +323,7 @@
     <div class="management-modules">
         <!-- Suppliers Module -->
         <div class="module-card">
-            <div class="module-icon">🏢</div>
+            <div class="module-icon"></div>
             <h4>Suppliers</h4>
             <div class="module-links">
                 <a href="${pageContext.request.contextPath}/SupplierServlet?action=list" class="orange">View All</a>
