@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
     public class PasswordValidator {
 
-        // Password must be at least 8 characters, contain uppercase, lowercase, digit, and special character
         private static final String PASSWORD_PATTERN =
                 "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
 
@@ -48,7 +47,7 @@ import java.util.regex.Pattern;
             if (password.contains(" ")) {
                 return "Password cannot contain spaces.";
             }
-            return null; // Password is valid
+            return null;
         }
     }
 

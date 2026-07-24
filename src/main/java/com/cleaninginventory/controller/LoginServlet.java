@@ -16,16 +16,28 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     public void init() {
+        try {
+            Class.forName("org.postgresql.Driver");
+            System.out.println("✅ PostgreSQL Driver loaded successfully!");
+        } catch (ClassNotFoundException e) {
+            System.err.println("❌ PostgreSQL Driver NOT found!");
+            e.printStackTrace();
+        }
         userDAO = new UserDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // If user is already logged in, redirect to dashboard
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
-            response.sendRedirect("DashboardServlet");
+            User user = (User) session.getAttribute("user");
+            // ✅ Role-based redirection
+            if ("STOREKEEPER".equalsIgnoreCase(user.getRole())) {
+                response.sendRedirect(request.getContextPath() + "/storekeeper/dashboard");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/DashboardServlet");
+            }
             return;
         }
         request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -38,7 +50,6 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        // Input validation
         if (username == null || username.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()) {
 
@@ -47,23 +58,28 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // Authenticate user
         User user = userDAO.loginUser(username.trim(), password.trim());
 
         if (user != null) {
-            // Login successful - create session
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             session.setAttribute("username", user.getUsername());
             session.setAttribute("role", user.getRole());
             session.setAttribute("fullName", user.getFullName());
-            session.setMaxInactiveInterval(30 * 60); // 30 minutes timeout
+            session.setMaxInactiveInterval(30 * 60);
 
-            // Redirect to dashboard
-            response.sendRedirect("DashboardServlet");
+            // ✅ Role-based redirection after login
+            String role = user.getRole();
+            if ("STOREKEEPER".equalsIgnoreCase(role)) {
+                response.sendRedirect(request.getContextPath() + "/storekeeper/dashboard");
+            } else if ("SUPERVISOR".equalsIgnoreCase(role) || "ADMIN".equalsIgnoreCase(role)) {
+                response.sendRedirect(request.getContextPath() + "/DashboardServlet");
+            } else {
+                // Default fallback
+                response.sendRedirect(request.getContextPath() + "/DashboardServlet");
+            }
 
         } else {
-            // Login failed
             request.setAttribute("error", "Invalid username or password. Please try again.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }

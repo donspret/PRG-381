@@ -1,4 +1,4 @@
-package com.example.final_prg381.model;
+package com.cleaninginventory.model;
 
 import java.sql.Timestamp;
 

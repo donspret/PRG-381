@@ -17,6 +17,7 @@ public class DashboardServlet extends HttpServlet {
 
     @Override
     public void init() {
+        System.out.println("✅ DashboardServlet initialized!");
         dashboardDAO = new DashboardDAO();
     }
 
@@ -24,24 +25,35 @@ public class DashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Check if user is logged in
+        System.out.println("✅ DashboardServlet doGet called!");
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.jsp");
+            System.out.println("❌ User not logged in, redirecting to login");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
-        // Get user from session
         User user = (User) session.getAttribute("user");
+        System.out.println("👤 User: " + user.getUsername() + " | Role: " + user.getRole());
 
-        // Get dashboard statistics
+        // ✅ Redirect storekeepers to their dashboard
+        if ("STOREKEEPER".equalsIgnoreCase(user.getRole())) {
+            System.out.println("🔄 Storekeeper detected, redirecting to storekeeper dashboard");
+            response.sendRedirect(request.getContextPath() + "/storekeeper/dashboard");
+            return;
+        }
+
+        // ✅ Get dashboard statistics for supervisors/admins
+        System.out.println("📊 Fetching dashboard statistics...");
         DashboardStats stats = dashboardDAO.getDashboardStats();
+        System.out.println("📊 Stats retrieved: " + stats);
 
-        // Set attributes for JSP
         request.setAttribute("stats", stats);
         request.setAttribute("user", user);
 
-        // Forward to dashboard
-        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+        // ✅ Forward to supervisor dashboard (full access)
+        System.out.println("🔄 Forwarding to dashboardSupervisor.jsp");
+        request.getRequestDispatcher("/dashboardSupervisor.jsp").forward(request, response);
     }
 }

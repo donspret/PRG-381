@@ -1,4 +1,4 @@
-package com.example.final_prg381.model;
+package com.cleaninginventory.model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -13,9 +13,9 @@ public class Material {
     private BigDecimal unitPrice;
     private int supplierId;
     private Timestamp lastUpdated;
+    private Timestamp createdAt;
 
-    public Material() {
-    }
+    public Material() {}
 
     public Material(int materialId, String materialName, String category, String unit,
                     int quantityInStock, int lowStockThreshold, BigDecimal unitPrice,
@@ -57,7 +57,18 @@ public class Material {
     public Timestamp getLastUpdated() { return lastUpdated; }
     public void setLastUpdated(Timestamp lastUpdated) { this.lastUpdated = lastUpdated; }
 
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
     public boolean isLowStock() {
         return quantityInStock <= lowStockThreshold;
+    }
+
+    public String getStatus() {
+        return isLowStock() ? "Low Stock" : "In Stock";
+    }
+
+    public String getStatusClass() {
+        return isLowStock() ? "low-stock" : "in-stock";
     }
 }
