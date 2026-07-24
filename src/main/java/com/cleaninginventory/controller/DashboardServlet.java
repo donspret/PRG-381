@@ -30,13 +30,21 @@ public class DashboardServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             System.out.println("❌ User not logged in, redirecting to login");
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
         User user = (User) session.getAttribute("user");
-        System.out.println("👤 User: " + user.getUsername());
+        System.out.println("👤 User: " + user.getUsername() + " | Role: " + user.getRole());
 
+        // ✅ Redirect storekeepers to their dashboard
+        if ("STOREKEEPER".equalsIgnoreCase(user.getRole())) {
+            System.out.println("🔄 Storekeeper detected, redirecting to storekeeper dashboard");
+            response.sendRedirect(request.getContextPath() + "/storekeeper/dashboard");
+            return;
+        }
+
+        // ✅ Get dashboard statistics for supervisors/admins
         System.out.println("📊 Fetching dashboard statistics...");
         DashboardStats stats = dashboardDAO.getDashboardStats();
         System.out.println("📊 Stats retrieved: " + stats);
@@ -44,7 +52,8 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("stats", stats);
         request.setAttribute("user", user);
 
-        System.out.println("🔄 Forwarding to dashboard.jsp");
-        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+        // ✅ Forward to supervisor dashboard (full access)
+        System.out.println("🔄 Forwarding to dashboardSupervisor.jsp");
+        request.getRequestDispatcher("/dashboardSupervisor.jsp").forward(request, response);
     }
 }

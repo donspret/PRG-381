@@ -9,6 +9,10 @@
         return;
     }
     List<Supplier> suppliers = (List<Supplier>) request.getAttribute("suppliers");
+
+    // Role checks
+    boolean isStorekeeper = "STOREKEEPER".equalsIgnoreCase(user.getRole());
+    boolean isSupervisor = "SUPERVISOR".equalsIgnoreCase(user.getRole()) || "ADMIN".equalsIgnoreCase(user.getRole());
 %>
 <!DOCTYPE html>
 <html>
@@ -55,6 +59,18 @@
             background: #27ae60;
         }
         .header .add-btn:hover {
+            background: #219a52;
+        }
+        .header .dashboard-btn {
+            background: #3498db;
+        }
+        .header .dashboard-btn:hover {
+            background: #2980b9;
+        }
+        .header .storekeeper-dashboard-btn {
+            background: #27ae60;
+        }
+        .header .storekeeper-dashboard-btn:hover {
             background: #219a52;
         }
         .search-box {
@@ -111,6 +127,7 @@
             text-decoration: none;
             border-radius: 4px;
             font-size: 12px;
+            display: inline-block;
         }
         .btn-edit:hover {
             background: #d68910;
@@ -122,9 +139,15 @@
             text-decoration: none;
             border-radius: 4px;
             font-size: 12px;
+            display: inline-block;
         }
         .btn-delete:hover {
             background: #c0392b;
+        }
+        .read-only-badge {
+            color: #95a5a6;
+            font-size: 12px;
+            font-style: italic;
         }
         .alert {
             padding: 12px 15px;
@@ -141,6 +164,11 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
         .no-data {
             text-align: center;
             color: #7f8c8d;
@@ -154,8 +182,12 @@
     <div class="header">
         <h2>🏢 Suppliers Management</h2>
         <div>
-            <a href="${pageContext.request.contextPath}/SupplierServlet?action=add" class="add-btn">➕ Add Supplier</a>
-            <a href="${pageContext.request.contextPath}/DashboardServlet">📊 Dashboard</a>
+            <% if (isSupervisor) { %>
+                <a href="${pageContext.request.contextPath}/SupplierServlet?action=add" class="add-btn">➕ Add Supplier</a>
+                <a href="${pageContext.request.contextPath}/DashboardServlet" class="dashboard-btn">📊 Dashboard</a>
+            <% } else { %>
+                <a href="${pageContext.request.contextPath}/storekeeper/dashboard" class="storekeeper-dashboard-btn">🏠 Dashboard</a>
+            <% } %>
             <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
         </div>
     </div>
@@ -174,6 +206,12 @@
     <%
         }
     %>
+
+    <% if (isStorekeeper) { %>
+        <div class="alert alert-info">
+            ℹ️ You are in <strong>read-only</strong> mode. Contact a Supervisor for changes.
+        </div>
+    <% } %>
 
     <div class="search-box">
         <form action="${pageContext.request.contextPath}/SupplierServlet" method="get">
@@ -215,10 +253,14 @@
                     </span>
                 </td>
                 <td>
-                    <a href="${pageContext.request.contextPath}/SupplierServlet?action=edit&id=<%= supplier.getSupplierId() %>" class="btn-edit">Edit</a>
-                    <a href="${pageContext.request.contextPath}/SupplierServlet?action=delete&id=<%= supplier.getSupplierId() %>"
-                       class="btn-delete"
-                       onclick="return confirm('Are you sure you want to delete this supplier?')">Delete</a>
+                    <% if (isSupervisor) { %>
+                        <a href="${pageContext.request.contextPath}/SupplierServlet?action=edit&id=<%= supplier.getSupplierId() %>" class="btn-edit">Edit</a>
+                        <a href="${pageContext.request.contextPath}/SupplierServlet?action=delete&id=<%= supplier.getSupplierId() %>"
+                           class="btn-delete"
+                           onclick="return confirm('Are you sure you want to delete this supplier?')">Delete</a>
+                    <% } else { %>
+                        <span class="read-only-badge">🔒 Read-Only</span>
+                    <% } %>
                 </td>
             </tr>
             <%

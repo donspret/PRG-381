@@ -6,13 +6,13 @@ import java.sql.SQLException;
 
 public class DBConnection {
     private static final String URL =
-            "jdbc:postgresql://localhost:5432/------"; //Change to your local connection
+            "jdbc:postgresql://localhost:5432/PRG381_Project"; //Change to your local connection
 
     private static final String USER = //Change to your local USER
-            "-------";
+            "postgres";
 
     private static final String PASSWORD = //Change to your local Password
-            "-------";
+            "RJord#2026";
 
     static {
         try {

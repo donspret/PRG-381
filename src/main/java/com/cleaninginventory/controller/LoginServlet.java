@@ -16,6 +16,13 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     public void init() {
+        try {
+            Class.forName("org.postgresql.Driver");
+            System.out.println("✅ PostgreSQL Driver loaded successfully!");
+        } catch (ClassNotFoundException e) {
+            System.err.println("❌ PostgreSQL Driver NOT found!");
+            e.printStackTrace();
+        }
         userDAO = new UserDAO();
     }
 
@@ -24,7 +31,13 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
-            response.sendRedirect("DashboardServlet");
+            User user = (User) session.getAttribute("user");
+            // ✅ Role-based redirection
+            if ("STOREKEEPER".equalsIgnoreCase(user.getRole())) {
+                response.sendRedirect(request.getContextPath() + "/storekeeper/dashboard");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/DashboardServlet");
+            }
             return;
         }
         request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -55,7 +68,16 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("fullName", user.getFullName());
             session.setMaxInactiveInterval(30 * 60);
 
-            response.sendRedirect("DashboardServlet");
+            // ✅ Role-based redirection after login
+            String role = user.getRole();
+            if ("STOREKEEPER".equalsIgnoreCase(role)) {
+                response.sendRedirect(request.getContextPath() + "/storekeeper/dashboard");
+            } else if ("SUPERVISOR".equalsIgnoreCase(role) || "ADMIN".equalsIgnoreCase(role)) {
+                response.sendRedirect(request.getContextPath() + "/DashboardServlet");
+            } else {
+                // Default fallback
+                response.sendRedirect(request.getContextPath() + "/DashboardServlet");
+            }
 
         } else {
             request.setAttribute("error", "Invalid username or password. Please try again.");

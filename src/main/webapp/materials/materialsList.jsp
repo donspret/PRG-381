@@ -11,6 +11,10 @@
     List<Material> materials = (List<Material>) request.getAttribute("materials");
     Boolean lowStockView = (Boolean) request.getAttribute("lowStockView");
     String keyword = (String) request.getAttribute("keyword");
+
+    // Role checks
+    boolean isStorekeeper = "STOREKEEPER".equalsIgnoreCase(user.getRole());
+    boolean isSupervisor = "SUPERVISOR".equalsIgnoreCase(user.getRole()) || "ADMIN".equalsIgnoreCase(user.getRole());
 %>
 <!DOCTYPE html>
 <html>
@@ -25,6 +29,10 @@
         .header a:hover { background: #c0392b; }
         .header .add-btn { background: #27ae60; }
         .header .add-btn:hover { background: #219a52; }
+        .header .dashboard-btn { background: #3498db; }
+        .header .dashboard-btn:hover { background: #2980b9; }
+        .header .storekeeper-dashboard-btn { background: #27ae60; }
+        .header .storekeeper-dashboard-btn:hover { background: #219a52; }
         .search-box { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
         .search-box input { padding: 8px; width: 250px; border: 1px solid #ddd; border-radius: 4px; }
         .search-box .btn { padding: 8px 16px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; }
@@ -36,10 +44,11 @@
         th { background: #2c3e50; color: white; }
         tr:hover { background: #f5f5f5; }
         .low-stock { color: red; font-weight: bold; }
-        .btn-edit { background: #f39c12; color: white; padding: 4px 10px; text-decoration: none; border-radius: 4px; font-size: 12px; }
+        .btn-edit { background: #f39c12; color: white; padding: 4px 10px; text-decoration: none; border-radius: 4px; font-size: 12px; display: inline-block; }
         .btn-edit:hover { background: #d68910; }
-        .btn-delete { background: #e74c3c; color: white; padding: 4px 10px; text-decoration: none; border-radius: 4px; font-size: 12px; }
+        .btn-delete { background: #e74c3c; color: white; padding: 4px 10px; text-decoration: none; border-radius: 4px; font-size: 12px; display: inline-block; }
         .btn-delete:hover { background: #c0392b; }
+        .read-only-badge { color: #95a5a6; font-size: 12px; font-style: italic; }
         .alert { padding: 12px 15px; margin-bottom: 20px; border-radius: 4px; }
         .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
@@ -57,8 +66,12 @@
     <div class="header">
         <h2>📦 Materials Management</h2>
         <div>
-            <a href="${pageContext.request.contextPath}/materials?action=new" class="add-btn">➕ Add Material</a>
-            <a href="${pageContext.request.contextPath}/DashboardServlet">📊 Dashboard</a>
+            <% if (isSupervisor) { %>
+                <a href="${pageContext.request.contextPath}/materials?action=new" class="add-btn">➕ Add Material</a>
+                <a href="${pageContext.request.contextPath}/DashboardServlet" class="dashboard-btn">📊 Dashboard</a>
+            <% } else { %>
+                <a href="${pageContext.request.contextPath}/storekeeper/dashboard" class="storekeeper-dashboard-btn">🏠 Dashboard</a>
+            <% } %>
             <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
         </div>
     </div>
@@ -83,6 +96,12 @@
         }
     %>
 
+    <% if (isStorekeeper) { %>
+        <div class="alert alert-info">
+            ℹ️ You are in <strong>read-only</strong> mode. Contact a Supervisor for changes.
+        </div>
+    <% } %>
+
     <div class="search-box">
         <form action="${pageContext.request.contextPath}/materials" method="get">
             <input type="hidden" name="action" value="search">
@@ -90,7 +109,9 @@
             <button type="submit" class="btn">Search</button>
         </form>
         <a href="${pageContext.request.contextPath}/materials?action=list" class="btn" style="background:#95a5a6;">Clear</a>
-        <a href="${pageContext.request.contextPath}/materials?action=lowstock" class="btn btn-low-stock">⚠️ Low Stock</a>
+        <% if (isSupervisor) { %>
+            <a href="${pageContext.request.contextPath}/materials?action=lowstock" class="btn btn-low-stock">⚠️ Low Stock</a>
+        <% } %>
     </div>
 
     <table>
@@ -127,12 +148,16 @@
                     <% } %>
                 </td>
                 <td>
-                    <div class="action-links">
-                        <a href="${pageContext.request.contextPath}/materials?action=edit&id=<%= material.getMaterialId() %>" class="btn-edit">Edit</a>
-                        <a href="${pageContext.request.contextPath}/materials?action=delete&id=<%= material.getMaterialId() %>"
-                           class="btn-delete"
-                           onclick="return confirm('Are you sure you want to delete this material?')">Delete</a>
-                    </div>
+                    <% if (isSupervisor) { %>
+                        <div class="action-links">
+                            <a href="${pageContext.request.contextPath}/materials?action=edit&id=<%= material.getMaterialId() %>" class="btn-edit">Edit</a>
+                            <a href="${pageContext.request.contextPath}/materials?action=delete&id=<%= material.getMaterialId() %>"
+                               class="btn-delete"
+                               onclick="return confirm('Are you sure you want to delete this material?')">Delete</a>
+                        </div>
+                    <% } else { %>
+                        <span class="read-only-badge">🔒 Read-Only</span>
+                    <% } %>
                 </td>
             </tr>
             <%
