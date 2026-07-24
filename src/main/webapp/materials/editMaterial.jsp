@@ -50,7 +50,7 @@
 
 <div class="container">
     <div class="header">
-        <h2>✏️ Edit Material</h2>
+        <h2>Edit Material</h2>
         <div>
             <a href="${pageContext.request.contextPath}/materials?action=list" class="back-btn">← Back to Materials</a>
             <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
@@ -79,7 +79,7 @@
             <% if (material.isLowStock()) { %>
                 <span class="status-badge status-low">⚠️ Low Stock</span>
             <% } else { %>
-                <span class="status-badge status-ok">✅ In Stock</span>
+                <span class="status-badge status-ok">In Stock</span>
             <% } %>
         </p>
         <p><strong>Current Quantity:</strong> <%= material.getQuantityInStock() %> <%= material.getUnit() != null ? material.getUnit() : "" %></p>

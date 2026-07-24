@@ -235,20 +235,20 @@
 
 <div class="container">
     <div class="header">
-        <span class="icon">🧹</span>
+        <span class="icon"></span>
         <h1>Cleaning Inventory System</h1>
         <p class="subtitle">University Cleaning Management System</p>
     </div>
 
     <!-- Error Alert -->
     <div id="errorAlert" class="alert alert-error <%= errorMessage != null && !errorMessage.isEmpty() ? "show" : "" %>">
-        <span class="alert-icon">❌</span>
+        <span class="alert-icon"></span>
         <span id="errorMessage"><%= errorMessage != null ? errorMessage : "" %></span>
     </div>
 
     <!-- Success Alert -->
     <div id="successAlert" class="alert alert-success <%= successMessage != null && !successMessage.isEmpty() ? "show" : "" %>">
-        <span class="alert-icon">✅</span>
+        <span class="alert-icon"></span>
         <span id="successMessage"><%= successMessage != null ? successMessage : "" %></span>
     </div>
 
@@ -270,7 +270,7 @@
         </div>
 
         <button type="submit" class="btn-login" id="loginBtn">
-            <span id="btnText">🔑 Login</span>
+            <span id="btnText">Login</span>
         </button>
     </form>
 

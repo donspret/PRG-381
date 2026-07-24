@@ -119,7 +119,7 @@
 
 <div class="container">
     <div class="header">
-        <h2>➕ Add New Supplier</h2>
+        <h2>Add New Supplier</h2>
         <div>
             <a href="${pageContext.request.contextPath}/SupplierServlet?action=list" class="back-btn">← Back to Suppliers</a>
             <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>

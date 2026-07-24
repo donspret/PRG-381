@@ -42,6 +42,7 @@
         .stat-card .number.green { color: #27ae60; }
         .stat-card .number.orange { color: #f39c12; }
         .stat-card .number.blue { color: #3498db; }
+        .stat-card .number.red { color: #e74c3c; }
         .section-title { color: #2c3e50; font-size: 16px; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 15px; }
         .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
         .action-card { background: #ecf0f1; padding: 20px; border-radius: 8px; text-align: center; transition: transform 0.2s; border: 2px solid transparent; }
@@ -53,8 +54,10 @@
         .action-card a:hover { background: #219a52; }
         .action-card .view-btn { background: #3498db; }
         .action-card .view-btn:hover { background: #2980b9; }
-        .action-card .disabled { background: #95a5a6; cursor: not-allowed; }
-        .action-card .disabled:hover { background: #95a5a6; }
+        .action-card .warning-btn { background: #f1c40f; color: #2c3e50; }
+        .action-card .warning-btn:hover { background: #d4ac0d; }
+        .action-card .purple-btn { background: #8e44ad; }
+        .action-card .purple-btn:hover { background: #7d3c98; }
         .info-box { background: #d1ecf1; color: #0c5460; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #bee5eb; }
         .footer { text-align: center; color: #7f8c8d; font-size: 12px; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ecf0f1; }
     </style>
@@ -64,9 +67,9 @@
 <div class="container">
     <!-- Header -->
     <div class="header">
-        <h2>🏪 Storekeeper Dashboard</h2>
+        <h2>Storekeeper Dashboard</h2>
         <div class="user-info">
-            <span>👤 <%= user.getFirstName() %> <%= user.getLastName() %></span>
+            <span><%= user.getFirstName() %> <%= user.getLastName() %></span>
             <span class="role-badge"><%= user.getRole() %></span>
             <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
         </div>
@@ -74,42 +77,37 @@
 
     <!-- Welcome Section -->
     <div class="welcome-section">
-        <h3>Welcome back, <%= user.getFirstName() %>! 👋</h3>
-        <p>You are logged in as a <strong>Storekeeper</strong>. You can view inventory, cleaners, and suppliers.</p>
-    </div>
-
-    <div class="info-box">
-        ℹ️ As a Storekeeper, you have <strong>read-only</strong> access to materials, cleaners, and suppliers.
-        For any changes, please contact a Supervisor.
+        <h3>Welcome back, <%= user.getFirstName() %>!</h3>
+        <p>You are logged in as a <strong>Storekeeper</strong>. You can view inventory, cleaners, suppliers, and report issues.</p>
     </div>
 
     <!-- Statistics -->
-    <h3 class="section-title">📊 Inventory Overview</h3>
+    <h3 class="section-title">Inventory Overview</h3>
     <div class="stats-grid">
         <div class="stat-card">
             <div class="number blue"><%= stats != null ? stats.getTotalMaterials() : 0 %></div>
-            <div class="label">📦 Total Materials</div>
+            <div class="label">Total Materials</div>
         </div>
         <div class="stat-card">
-            <div class="number orange"><%= stats != null ? stats.getLowStockItems() : 0 %></div>
-            <div class="label">⚠️ Low Stock Items</div>
+            <div class="number red"><%= stats != null ? stats.getLowStockItems() : 0 %></div>
+            <div class="label">Low Stock Items</div>
         </div>
         <div class="stat-card">
             <div class="number green"><%= stats != null ? stats.getTotalCleaners() : 0 %></div>
-            <div class="label">🧹 Active Cleaners</div>
+            <div class="label">Active Cleaners</div>
         </div>
         <div class="stat-card">
             <div class="number blue"><%= stats != null ? stats.getTotalSuppliers() : 0 %></div>
-            <div class="label">🏢 Active Suppliers</div>
+            <div class="label">Active Suppliers</div>
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <h3 class="section-title">📁 View Modules (Read-Only)</h3>
+    <!-- Modules -->
+    <h3 class="section-title">Modules</h3>
     <div class="action-grid">
         <!-- View Materials -->
         <div class="action-card">
-            <div class="icon">📦</div>
+            <div class="icon"></div>
             <h4>Materials</h4>
             <p>View all materials in inventory</p>
             <a href="${pageContext.request.contextPath}/materials?action=list" class="view-btn">View Materials</a>
@@ -117,7 +115,7 @@
 
         <!-- View Cleaners -->
         <div class="action-card">
-            <div class="icon">🧹</div>
+            <div class="icon"></div>
             <h4>Cleaners</h4>
             <p>View all cleaners and their status</p>
             <a href="${pageContext.request.contextPath}/CleanerServlet?action=list" class="view-btn">View Cleaners</a>
@@ -125,17 +123,32 @@
 
         <!-- View Suppliers -->
         <div class="action-card">
-            <div class="icon">🏢</div>
+            <div class="icon"></div>
             <h4>Suppliers</h4>
             <p>View all suppliers and their details</p>
             <a href="${pageContext.request.contextPath}/SupplierServlet?action=list" class="view-btn">View Suppliers</a>
+        </div>
+
+        <!-- Report Issue -->
+        <div class="action-card">
+            <div class="icon"></div>
+            <h4>Report Issue</h4>
+            <p>Report defective products, delays, shortages, or other issues</p>
+            <a href="${pageContext.request.contextPath}/issues?action=new" class="warning-btn">Report Issue</a>
+        </div>
+
+        <!-- View My Issues -->
+        <div class="action-card">
+            <div class="icon"></div>
+            <h4>My Issues</h4>
+            <p>View all issues you have reported</p>
+            <a href="${pageContext.request.contextPath}/issues" class="purple-btn">View My Issues</a>
         </div>
     </div>
 
     <!-- Footer -->
     <div class="footer">
         <p>Cleaning Inventory System - University Management &copy; 2026</p>
-        <p>Storekeeper Access Only - Read-Only View</p>
     </div>
 </div>
 

@@ -45,7 +45,7 @@
 
 <div class="container">
     <div class="header">
-        <h2><%= isEdit ? "✏️ Edit" : "➕ Add" %> Material</h2>
+        <h2><%= isEdit ? "Edit" : "Add" %> Material</h2>
         <div>
             <a href="${pageContext.request.contextPath}/materials?action=list" class="back-btn">← Back to Materials</a>
             <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>

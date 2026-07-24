@@ -184,13 +184,13 @@
 
 <div class="container">
     <div class="header">
-        <h2>🧹 Cleaners Management</h2>
+        <h2>Cleaners Management</h2>
         <div>
             <% if (isSupervisor) { %>
-                <a href="${pageContext.request.contextPath}/CleanerServlet?action=add" class="add-btn">➕ Add Cleaner</a>
-                <a href="${pageContext.request.contextPath}/DashboardServlet" class="dashboard-btn">📊 Dashboard</a>
+                <a href="${pageContext.request.contextPath}/CleanerServlet?action=add" class="add-btn">Add Cleaner</a>
+                <a href="${pageContext.request.contextPath}/DashboardServlet" class="dashboard-btn">Dashboard</a>
             <% } else { %>
-                <a href="${pageContext.request.contextPath}/storekeeper/dashboard" class="storekeeper-dashboard-btn">🏠 Dashboard</a>
+                <a href="${pageContext.request.contextPath}/storekeeper/dashboard" class="storekeeper-dashboard-btn">Dashboard</a>
             <% } %>
             <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
         </div>
@@ -213,7 +213,7 @@
 
     <% if (isStorekeeper) { %>
         <div class="alert alert-info">
-            ℹ️ You are in <strong>read-only</strong> mode. Contact a Supervisor for changes.
+            ℹYou are in <strong>read-only</strong> mode. Contact a Supervisor for changes.
         </div>
     <% } %>
 
@@ -264,7 +264,7 @@
                            class="btn-delete"
                            onclick="return confirm('Are you sure you want to delete this cleaner?')">Delete</a>
                     <% } else { %>
-                        <span class="read-only-badge">🔒 Read-Only</span>
+                        <span class="read-only-badge">Read-Only</span>
                     <% } %>
                 </td>
             </tr>

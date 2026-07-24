@@ -329,20 +329,20 @@
 
 <div class="container">
     <div class="header">
-        <span class="icon">📝</span>
+        <span class="icon"></span>
         <h1>Create Account</h1>
         <p class="subtitle">Register for Cleaning Management System</p>
     </div>
 
     <!-- Error Alert -->
     <div id="errorAlert" class="alert alert-error <%= errorMessage != null && !errorMessage.isEmpty() ? "show" : "" %>">
-        <span class="alert-icon">❌</span>
+        <span class="alert-icon"></span>
         <span id="errorMessage"><%= errorMessage != null ? errorMessage : "" %></span>
     </div>
 
     <!-- Success Alert -->
     <div id="successAlert" class="alert alert-success <%= successMessage != null && !successMessage.isEmpty() ? "show" : "" %>">
-        <span class="alert-icon">✅</span>
+        <span class="alert-icon"></span>
         <span id="successMessage"><%= successMessage != null ? successMessage : "" %></span>
     </div>
 
@@ -414,7 +414,7 @@
         </div>
 
         <button type="submit" class="btn-register" id="registerBtn">
-            <span id="btnText">✅ Register</span>
+            <span id="btnText">Register</span>
         </button>
     </form>
 

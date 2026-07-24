@@ -64,11 +64,11 @@
 
 <div class="container">
     <div class="header">
-        <h2>📦 Materials Management</h2>
+        <h2>Materials Management</h2>
         <div>
             <% if (isSupervisor) { %>
-                <a href="${pageContext.request.contextPath}/materials?action=new" class="add-btn">➕ Add Material</a>
-                <a href="${pageContext.request.contextPath}/DashboardServlet" class="dashboard-btn">📊 Dashboard</a>
+                <a href="${pageContext.request.contextPath}/materials?action=new" class="add-btn">Add Material</a>
+                <a href="${pageContext.request.contextPath}/DashboardServlet" class="dashboard-btn">Dashboard</a>
             <% } else { %>
                 <a href="${pageContext.request.contextPath}/storekeeper/dashboard" class="storekeeper-dashboard-btn">🏠 Dashboard</a>
             <% } %>
@@ -98,7 +98,7 @@
 
     <% if (isStorekeeper) { %>
         <div class="alert alert-info">
-            ℹ️ You are in <strong>read-only</strong> mode. Contact a Supervisor for changes.
+            You are in <strong>read-only</strong> mode. Contact a Supervisor for changes.
         </div>
     <% } %>
 
@@ -144,7 +144,7 @@
                     <% if (isLowStock) { %>
                         <span class="status-badge status-low">⚠️ Low Stock</span>
                     <% } else { %>
-                        <span class="status-badge status-ok">✅ In Stock</span>
+                        <span class="status-badge status-ok">In Stock</span>
                     <% } %>
                 </td>
                 <td>
@@ -156,7 +156,7 @@
                                onclick="return confirm('Are you sure you want to delete this material?')">Delete</a>
                         </div>
                     <% } else { %>
-                        <span class="read-only-badge">🔒 Read-Only</span>
+                        <span class="read-only-badge">Read-Only</span>
                     <% } %>
                 </td>
             </tr>

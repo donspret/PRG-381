@@ -158,6 +158,10 @@
         .quick-actions a.teal:hover { background: #16a085; }
         .quick-actions a.dark { background: #2c3e50; }
         .quick-actions a.dark:hover { background: #1a252f; }
+        .quick-actions a.warning { background: #f1c40f; color: #2c3e50; }
+        .quick-actions a.warning:hover { background: #d4ac0d; }
+        .quick-actions a.disabled { background: #95a5a6; cursor: not-allowed; opacity: 0.6; }
+        .quick-actions a.disabled:hover { background: #95a5a6; }
         .management-modules {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -211,6 +215,10 @@
         .module-card .module-links a.purple:hover { background: #7d3c98; }
         .module-card .module-links a.red { background: #e74c3c; }
         .module-card .module-links a.red:hover { background: #c0392b; }
+        .module-card .module-links a.warning { background: #f1c40f; color: #2c3e50; }
+        .module-card .module-links a.warning:hover { background: #d4ac0d; }
+        .module-card .module-links a.disabled { background: #95a5a6; cursor: not-allowed; opacity: 0.6; }
+        .module-card .module-links a.disabled:hover { background: #95a5a6; }
         .footer {
             text-align: center;
             color: #7f8c8d;
@@ -218,6 +226,14 @@
             margin-top: 30px;
             padding-top: 15px;
             border-top: 1px solid #ecf0f1;
+        }
+        .info-box {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #bee5eb;
         }
         @media (max-width: 768px) {
             .header {
@@ -245,9 +261,9 @@
 <div class="container">
     <!-- Header -->
     <div class="header">
-        <h2>🧹 Cleaning Inventory System</h2>
+        <h2>Cleaning Inventory System</h2>
         <div class="user-info">
-            <span>👤 <%= user.getFirstName() %> <%= user.getLastName() %></span>
+            <span><%= user.getFirstName() %> <%= user.getLastName() %></span>
             <span class="role-badge"><%= user.getRole() %></span>
             <a href="LogoutServlet">Logout</a>
         </div>
@@ -255,12 +271,12 @@
 
     <!-- Welcome Section -->
     <div class="welcome-section">
-        <h3>Welcome back, <%= user.getFirstName() %>! 👋</h3>
-        <p>You are logged in as <strong><%= user.getRole() %></strong>. Manage suppliers, cleaners, materials, and issuances from here.</p>
+        <h3>Welcome back, <%= user.getFirstName() %>! </h3>
+        <p>You are logged in as <strong><%= user.getRole() %></strong>. Manage suppliers, cleaners, materials, and review reported issues.</p>
     </div>
 
     <!-- Statistics -->
-    <h3 class="section-title">📊 Dashboard Statistics</h3>
+    <h3 class="section-title">Dashboard Statistics</h3>
     <div class="stats-grid">
         <div class="stat-card">
             <div class="number blue"><%= stats != null ? stats.getTotalMaterials() : 0 %></div>
@@ -268,41 +284,42 @@
         </div>
         <div class="stat-card">
             <div class="number low-stock"><%= stats != null ? stats.getLowStockItems() : 0 %></div>
-            <div class="label">⚠️ Low Stock Items</div>
+            <div class="label">Low Stock Items</div>
         </div>
         <div class="stat-card">
             <div class="number green"><%= stats != null ? stats.getTotalCleaners() : 0 %></div>
-            <div class="label">🧹 Total Cleaners</div>
+            <div class="label">Total Cleaners</div>
         </div>
         <div class="stat-card">
             <div class="number orange"><%= stats != null ? stats.getTotalSuppliers() : 0 %></div>
-            <div class="label">📦 Total Suppliers</div>
+            <div class="label">Total Suppliers</div>
         </div>
         <div class="stat-card">
             <div class="number blue"><%= stats != null ? stats.getRecentIssuances() : 0 %></div>
-            <div class="label">📋 Recent Issuances</div>
+            <div class="label">Recent Issuances</div>
         </div>
         <div class="stat-card">
             <div class="number"><%= stats != null ? stats.getTotalUsers() : 0 %></div>
-            <div class="label">👤 Total Users</div>
+            <div class="label">Total Users</div>
         </div>
     </div>
 
     <!-- Quick Actions -->
     <h3 class="section-title">⚡ Quick Actions</h3>
     <div class="quick-actions">
-        <a href="${pageContext.request.contextPath}/SupplierServlet?action=add" class="orange">➕ Add Supplier</a>
-        <a href="${pageContext.request.contextPath}/SupplierServlet?action=list" class="orange">📋 View Suppliers</a>
-        <a href="${pageContext.request.contextPath}/CleanerServlet?action=add" class="green">➕ Add Cleaner</a>
-        <a href="${pageContext.request.contextPath}/CleanerServlet?action=list" class="green">📋 View Cleaners</a>
-        <a href="${pageContext.request.contextPath}/materials?action=new" class="blue">➕ Add Material</a>
-        <a href="${pageContext.request.contextPath}/materials?action=lowstock" class="red">⚠️ View Low Stock</a>
-        <a href="${pageContext.request.contextPath}/issuance?action=new" class="purple">📤 New Issuance</a>
-        <a href="${pageContext.request.contextPath}/reports" class="teal">📊 Generate Reports</a>
+        <a href="${pageContext.request.contextPath}/SupplierServlet?action=add" class="orange">Add Supplier</a>
+        <a href="${pageContext.request.contextPath}/SupplierServlet?action=list" class="orange">View Suppliers</a>
+        <a href="${pageContext.request.contextPath}/CleanerServlet?action=add" class="green">Add Cleaner</a>
+        <a href="${pageContext.request.contextPath}/CleanerServlet?action=list" class="green">View Cleaners</a>
+        <a href="${pageContext.request.contextPath}/materials?action=new" class="blue">Add Material</a>
+        <a href="${pageContext.request.contextPath}/materials?action=lowstock" class="red">View Low Stock</a>
+        <!-- Removed Report Issue link for supervisors -->
+        <a href="${pageContext.request.contextPath}/issues?action=list" class="purple">View Issues</a>
+        <a href="${pageContext.request.contextPath}/reports" class="teal">Generate Reports</a>
     </div>
 
     <!-- Management Modules -->
-    <h3 class="section-title">📁 Management Modules</h3>
+    <h3 class="section-title">Management Modules</h3>
     <div class="management-modules">
         <!-- Suppliers Module -->
         <div class="module-card">
@@ -316,7 +333,7 @@
 
         <!-- Cleaners Module -->
         <div class="module-card">
-            <div class="module-icon">🧹</div>
+            <div class="module-icon"></div>
             <h4>Cleaners</h4>
             <div class="module-links">
                 <a href="${pageContext.request.contextPath}/CleanerServlet?action=list" class="green">View All</a>
@@ -326,7 +343,7 @@
 
         <!-- Materials Module -->
         <div class="module-card">
-            <div class="module-icon">📦</div>
+            <div class="module-icon"></div>
             <h4>Materials</h4>
             <div class="module-links">
                 <a href="${pageContext.request.contextPath}/materials?action=list" class="blue">View All</a>
@@ -335,19 +352,20 @@
             </div>
         </div>
 
-        <!-- Issuances Module -->
+        <!-- Issues Module (View Only for Supervisors) -->
         <div class="module-card">
-            <div class="module-icon">📋</div>
-            <h4>Issuances</h4>
+            <div class="module-icon"></div>
+            <h4>Issues & Irregularities</h4>
             <div class="module-links">
-                <a href="${pageContext.request.contextPath}/issuance?action=list" class="purple">View All</a>
-                <a href="${pageContext.request.contextPath}/issuance?action=new" class="purple">New Issuance</a>
+                <a href="${pageContext.request.contextPath}/issues?action=list" class="purple">View All</a>
+                <a href="${pageContext.request.contextPath}/issues?action=open" class="red">Open</a>
+                <a href="${pageContext.request.contextPath}/issues?action=resolved" class="green">Resolved</a>
             </div>
         </div>
 
         <!-- Reports Module -->
         <div class="module-card">
-            <div class="module-icon">📊</div>
+            <div class="module-icon"></div>
             <h4>Reports</h4>
             <div class="module-links">
                 <a href="${pageContext.request.contextPath}/reports" class="teal">Generate Reports</a>
@@ -358,7 +376,7 @@
     <!-- Footer -->
     <div class="footer">
         <p>Cleaning Inventory System - University Management &copy; 2026</p>
-        <p>Developed for Programming 37(8)1</p>
+        <p>Developed for Programming 381</p>
     </div>
 </div>
 

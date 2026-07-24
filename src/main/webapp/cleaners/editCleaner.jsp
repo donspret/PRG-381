@@ -123,7 +123,7 @@
 
 <div class="container">
     <div class="header">
-        <h2>✏️ Edit Cleaner</h2>
+        <h2>Edit Cleaner</h2>
         <div>
             <a href="${pageContext.request.contextPath}/CleanerServlet?action=list" class="back-btn">← Back to Cleaners</a>
             <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
